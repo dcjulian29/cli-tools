@@ -1,0 +1,37 @@
+---
+name: Release Tool
+
+on:
+  push:
+    tags:
+      - "[0-9].*"
+
+jobs:
+  tool:
+    runs-on: windows-2022
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - run: git fetch --force --tags
+
+      - uses: actions/setup-go@v4
+        with:
+          cache-dependency-path: ${{ github.workspace }}/go.sum
+          go-version-file: ${{ github.workspace }}/go.mod
+
+      - name: Grab the image version to use.
+        id: v1
+        run: |
+          Write-Output "version=$(Get-Content ${{ github.workspace }}\VERSION)" `
+            | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding UTF8 -Append
+
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          args: release
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+          IMAGE_VERSION: ${{ steps.v1.outputs.version }}

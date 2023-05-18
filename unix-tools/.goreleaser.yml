@@ -1,0 +1,309 @@
+---
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id: alpine
+    binary: alpine
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: awk
+    binary: awk
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: base64
+    binary: base64
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: cut
+    binary: cut
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: curl
+    binary: curl
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: diff
+    binary: diff
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: du
+    binary: du
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: dos2unix
+    binary: dos2unix
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: grep
+    binary: grep
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: gunzip
+    binary: gunzip
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: gzip
+    binary: gzip
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: head
+    binary: head
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: jq
+    binary: jq
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: md5sum
+    binary: md5sum
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: nano
+    binary: nano
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: nc
+    binary: nc
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: nl
+    binary: nl
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: sed
+    binary: sed
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: seq
+    binary: seq
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: sha1sum
+    binary: sha1sum
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: sha256sum
+    binary: sha256sum
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: sha512sum
+    binary: sha512sum
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: sort
+    binary: sort
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: tail
+    binary: tail
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: tar
+    binary: tar
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: tree
+    binary: tree
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: unix2dos
+    binary: unix2dos
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: uniq
+    binary: uniq
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: vi
+    binary: vi
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: wc
+    binary: wc
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: wget
+    binary: wget
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: yamllint
+    binary: yamllint
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: yq
+    binary: yq
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: zcat
+    binary: zcat
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+archives:
+  - files:
+      - LICENSE
+    builds_info:
+      mode: 0755
+    name_template: "dcjulian29.apps.unix-tools_{{ .Version }}"
+    format_overrides:
+      - format: zip
+        goos: windows
+chocolateys:
+  - name: dcjulian29.apps.unix-tools
+    authors: Julian Easterling <julian@julianscorner.com>
+    project_url: https://github.com/dcjulian29/unix-tools/
+    copyright: 2023 Julian Easterling julian@julianscorner.com
+    license_url: https://github.com/dcjulian29/unix-tools/blob/main/LICENSE
+    require_license_acceptance: false
+    bug_tracker_url: https://github.com/dcjulian29/unix-tools/issues
+    description: |
+      unix-tools allows the execution of unix binaries via a Docker container on Windows.
+    dependencies:
+      - id: docker-desktop
+    api_key: "{{ .Env.CHOCO_API_KEY }}"
+    source_repo: "https://www.myget.org/F/dcjulian29-chocolatey/"
+    skip_publish: false
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
