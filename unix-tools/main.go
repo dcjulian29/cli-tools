@@ -36,6 +36,8 @@ func main() {
 		binary = "sh"
 	case "base64":
 		prefix = "/bin"
+	case "cat":
+		prefix = "/bin"
 	case "curl":
 		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
 		content = []byte(`#!/bin/sh

@@ -27,6 +27,14 @@ builds:
       - windows
     goarch:
       - amd64
+  - id: cat
+    binary: cat
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
   - id: cut
     binary: cut
     env:
