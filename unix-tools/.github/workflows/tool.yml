@@ -22,16 +22,9 @@ jobs:
           cache-dependency-path: ${{ github.workspace }}/go.sum
           go-version-file: ${{ github.workspace }}/go.mod
 
-      - name: Grab the image version to use.
-        id: v1
-        run: |
-          Write-Output "version=$(Get-Content ${{ github.workspace }}\VERSION)" `
-            | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding UTF8 -Append
-
       - uses: goreleaser/goreleaser-action@v4
         with:
           args: release
         env:
           GITHUB_TOKEN: ${{ github.token }}
           CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
-          IMAGE_VERSION: ${{ steps.v1.outputs.version }}
