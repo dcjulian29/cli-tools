@@ -1,0 +1,61 @@
+project_name: ip-scan
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+
+archives:
+  - builds_info:
+      group: root
+      owner: root
+      mode: 0755
+    name_template: "dcjulian29.apps.ip-scan_{{ .Version }}_{{ .Os }}"
+    format_overrides:
+      - format: zip
+        goos: windows
+
+nfpms:
+  - package_name: dcjulian29.apps.ip-scan
+    homepage: https://github.com/dcjulian29/cli-tools/ip-scan/
+    maintainer: Julian Easterling <julian@julianscorner.com>
+    license: Apache 2.0
+    description: |-
+      ip-scan scans a range of IP addresses and reports back host that respond to an ICMP echo request.
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/local/bin
+
+chocolateys:
+  - name: dcjulian29.apps.ip-scan
+    authors: Julian Easterling <julian@julianscorner.com>
+    project_url: https://github.com/dcjulian29/cli-tools/ip-scan/
+    copyright: 2023 Julian Easterling julian@julianscorner.com
+    license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
+    require_license_acceptance: false
+    bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
+    description: |
+      ip-scan scans a range of IP addresses and reports back host that respond to an ICMP echo request.
+    skip_publish: true
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^admin:'
+      - '^docs:'
+      - '^test:'
