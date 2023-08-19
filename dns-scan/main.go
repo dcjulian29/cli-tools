@@ -7,8 +7,10 @@ import (
 	"os"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/olekukonko/tablewriter"
+	"github.com/theckman/yacspin"
 )
 
 type EndpointInfo struct {
@@ -22,6 +24,14 @@ func main() {
 		fmt.Println("Error scanning IPs:", err)
 		return
 	}
+
+	spinner, _ := yacspin.New(yacspin.Config{
+		Frequency: 100 * time.Millisecond,
+		Colors:    []string{"fgYellow"},
+		CharSet:   yacspin.CharSets[69],
+	})
+
+	spinner.Start()
 
 	var wg sync.WaitGroup
 	results := make(chan EndpointInfo)
@@ -79,6 +89,8 @@ func main() {
 			info.fqdn,
 		})
 	}
+
+	spinner.Stop()
 
 	fmt.Println("")
 
