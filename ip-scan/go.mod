@@ -3,7 +3,7 @@ module github.com/dcjulian29/cli-tools/ip-scan
 go 1.21
 
 require (
-  github.com/olekukonko/tablewriter v0.0.5
+	github.com/olekukonko/tablewriter v0.0.5
 	github.com/theckman/yacspin v0.13.12
 )
 
@@ -13,5 +13,5 @@ require (
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
-	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
+	golang.org/x/sys v0.1.0 // indirect
 )
