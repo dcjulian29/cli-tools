@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net"
 	"os"
 	"sort"
@@ -11,17 +12,19 @@ import (
 
 	"github.com/olekukonko/tablewriter"
 	"github.com/theckman/yacspin"
+	"golang.org/x/net/icmp"
+	"golang.org/x/net/ipv4"
 )
 
 type EndpointInfo struct {
 	ip       net.IP
 	fqdn     string
 	ping     time.Duration
-	ttl      int
 	attempts int
 }
 
 func main() {
+	start := time.Now()
 	ips, err := expand_cidr(os.Args[1])
 	if err != nil {
 		fmt.Println("Error scanning IPs:", err)
@@ -48,10 +51,9 @@ func main() {
 
 			attempts := 1
 			pingTime := time.Duration(-1)
-			ttl := 0
 
 			for i := 0; i < 3; i++ {
-				pingTime, ttl = pingIP(ip)
+				pingTime = pingIP(ip)
 
 				if pingTime > 0 {
 					break
@@ -65,7 +67,6 @@ func main() {
 					ip:       net.ParseIP(ip),
 					fqdn:     getFQDN(ip),
 					ping:     pingTime,
-					ttl:      ttl,
 					attempts: attempts,
 				}
 
@@ -88,7 +89,7 @@ func main() {
 	})
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"IP Address", "FQDN", "Ping Time", "TTL"})
+	table.SetHeader([]string{"IP Address", "FQDN", "Ping Time"})
 	table.SetBorders(tablewriter.Border{Left: false, Top: false, Right: false, Bottom: false})
 	table.SetAutoWrapText(false)
 	table.SetAutoFormatHeaders(true)
@@ -106,7 +107,6 @@ func main() {
 			info.ip.String(),
 			info.fqdn,
 			info.ping.String(),
-			fmt.Sprintf("%d", info.ttl),
 		})
 	}
 
@@ -116,7 +116,8 @@ func main() {
 
 	table.Render()
 
-	fmt.Printf("\n %d host(s) responded\n", len(sortedResults))
+	duration := time.Since(start).Truncate(time.Millisecond)
+	fmt.Printf("\n  %d host(s) responded in %v\n", len(sortedResults), duration)
 }
 
 func expand_cidr(ipRange string) ([]string, error) {
@@ -152,34 +153,46 @@ func getFQDN(ip string) string {
 	return fqdn[0]
 }
 
-func pingIP(ip string) (time.Duration, int) {
-	addr := net.IPAddr{IP: net.ParseIP(ip)}
-	icmpPacket := []byte{8, 0, 247, 255, 0, 0, 0, 0}
-	conn, err := net.DialIP("ip4:icmp", nil, &addr)
+func pingIP(ip string) time.Duration {
+	addr := net.UDPAddr{IP: net.ParseIP(ip)}
+	conn, err := icmp.ListenPacket("udp4", "0.0.0.0")
 	if err != nil {
-		return time.Duration(-1), 0
+		log.Fatal(err)
 	}
 
 	defer conn.Close()
 
-	err = conn.SetDeadline(time.Now().Add(3 * time.Second))
-	if err != nil {
-		return time.Duration(-1), 0
+	msg := &icmp.Message{
+		Type: ipv4.ICMPTypeEcho,
+		Code: 0,
+		Body: &icmp.Echo{
+			ID:   os.Getpid() & 0xffff,
+			Seq:  0,
+			Data: []byte("ping"),
+		},
 	}
 
+	wb, _ := msg.Marshal(nil)
 	start := time.Now()
+	conn.WriteTo(wb, &addr)
+	rb := make([]byte, 1500)
+	conn.SetReadDeadline(time.Now().Add(5 * time.Second))
+	n, peer, err := conn.ReadFrom(rb)
 
-	_, err = conn.Write(icmpPacket)
-	if err != nil {
-		return time.Duration(-1), 0
+	if err == nil {
+		duration := time.Since(start)
+		rm, err := icmp.ParseMessage(1, rb[:n])
+		if err == nil {
+			if rm.Type == ipv4.ICMPTypeEchoReply {
+				echoReply, ok := msg.Body.(*icmp.Echo)
+				if ok {
+					if peer.(*net.UDPAddr).IP.String() == ip && echoReply.Seq == 0 {
+						return duration
+					}
+				}
+			}
+		}
 	}
 
-	reply := make([]byte, 1500)
-
-	_, err = conn.Read(reply)
-	if err != nil {
-		return time.Duration(-1), 0
-	}
-
-	return time.Since(start), int(reply[8])
+	return 0
 }
