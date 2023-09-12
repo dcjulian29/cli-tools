@@ -1,6 +1,7 @@
-go 1.21
+go 1.21.1
 
 use (
 	./dns-scan
 	./ip-scan
+	./ping
 )
