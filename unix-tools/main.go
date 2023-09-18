@@ -27,6 +27,7 @@ func main() {
 	temp, _ := os.LookupEnv("TEMP")
 	prefix := "/usr/bin"
 	binary := strings.ReplaceAll(filepath.Base(os.Args[0]), ".exe", "")
+	interactive := "-it"
 	entrypoint := ""
 	var content []byte
 
@@ -66,6 +67,7 @@ func main() {
 /usr/bin/http $@
 `)
 	case "jq":
+		interactive = "-i"
 		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
 		content = []byte(`#!/bin/sh
 
@@ -91,6 +93,7 @@ func main() {
 /usr/bin/yamllint $@
 `)
 	case "yq":
+		interactive = "-i"
 		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
 		content = []byte(`#!/bin/sh
 
@@ -115,7 +118,7 @@ func main() {
 	docker := []string{
 		"run",
 		"--rm",
-		"-it",
+		interactive,
 		"-v",
 		fmt.Sprintf("%s:%s", host, container),
 		"-w",
