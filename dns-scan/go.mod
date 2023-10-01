@@ -1,6 +1,6 @@
 module github.com/dcjulian29/cli-tools/dns-scan
 
-go 1.21
+go 1.21.1
 
 require (
 	github.com/olekukonko/tablewriter v0.0.5
