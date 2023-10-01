@@ -1,0 +1,61 @@
+project_name: dns-resolve
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+
+archives:
+  - builds_info:
+      group: root
+      owner: root
+      mode: 0755
+    name_template: "dcjulian29.apps.dns-resolve_{{ .Version }}_{{ .Os }}"
+    format_overrides:
+      - format: zip
+        goos: windows
+
+nfpms:
+  - package_name: dcjulian29.apps.dns-resolve
+    homepage: https://github.com/dcjulian29/cli-tools/ip-scan/
+    maintainer: Julian Easterling <julian@julianscorner.com>
+    license: Apache 2.0
+    description: |-
+      dns-resolve does a simple DNS search and shows the returned IP if the name resolves.
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/local/bin
+
+chocolateys:
+  - name: dcjulian29.apps.dns-resolve
+    authors: Julian Easterling <julian@julianscorner.com>
+    project_url: https://github.com/dcjulian29/cli-tools/dns-resolve/
+    copyright: 2023 Julian Easterling julian@julianscorner.com
+    license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
+    require_license_acceptance: false
+    bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
+    description: |
+      dns-resolve does a simple DNS search and shows the returned IP if the name resolves.
+    skip_publish: true
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^admin:'
+      - '^docs:'
+      - '^test:'
