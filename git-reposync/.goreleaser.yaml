@@ -1,4 +1,4 @@
-project_name: dns-resolve
+project_name: git-reposync
 before:
   hooks:
     - go mod tidy
@@ -16,34 +16,34 @@ archives:
   - builds_info:
       group: root
       owner: root
-      mode: 0755
-    name_template: "dcjulian29.apps.dns-resolve_{{ .Version }}_{{ .Os }}"
+      mode: '0755'
+    name_template: "dcjulian29.apps.git-reposync_{{ .Version }}_{{ .Os }}"
     format_overrides:
       - format: zip
         goos: windows
 
 nfpms:
-  - package_name: dcjulian29.apps.dns-resolve
-    homepage: https://github.com/dcjulian29/cli-tools/dns-resolve/
+  - package_name: dcjulian29.apps.git-reposync
+    homepage: https://github.com/dcjulian29/cli-tools/git-reposync/
     maintainer: Julian Easterling <julian@julianscorner.com>
     license: Apache 2.0
     description: |-
-      dns-resolve does a simple DNS search and shows the returned IP if the name resolves.
+      git-reposync synchronizes all git repositories located within the specified path or current directory.
     formats:
       - deb
       - rpm
     bindir: /usr/local/bin
 
 chocolateys:
-  - name: dcjulian29.apps.dns-resolve
+  - name: dcjulian29.apps.git-reposync
     authors: Julian Easterling <julian@julianscorner.com>
-    project_url: https://github.com/dcjulian29/cli-tools/dns-resolve/
+    project_url: https://github.com/dcjulian29/cli-tools/git-reposync/
     copyright: 2023 Julian Easterling julian@julianscorner.com
     license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
     require_license_acceptance: false
     bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
     description: |
-      dns-resolve does a simple DNS search and shows the returned IP if the name resolves.
+      git-reposync synchronizes all git repositories located within the specified path or current directory.
     skip_publish: true
 
 checksum:
