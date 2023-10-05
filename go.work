@@ -4,5 +4,6 @@ use (
 	./dns-resolve
 	./dns-scan
 	./git-repostatus
+	./git-reposync
 	./ip-scan
 )
