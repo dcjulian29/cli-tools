@@ -1,7 +1,8 @@
 go 1.21.1
 
 use (
-  ./dns-resolve
+	./dns-resolve
 	./dns-scan
+	./git-repostatus
 	./ip-scan
 )
