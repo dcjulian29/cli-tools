@@ -16,7 +16,7 @@ archives:
   - builds_info:
       group: root
       owner: root
-      mode: '0755'
+      mode: 0755
     name_template: "dcjulian29.apps.git-repostatus_{{ .Version }}_{{ .Os }}"
     format_overrides:
       - format: zip
