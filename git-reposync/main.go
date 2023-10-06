@@ -80,7 +80,9 @@ func main() {
 	spinner.Stop()
 
 	for _, info := range processed {
-		fmt.Printf("\n%s\n\n%s", color.HiYellowString(info.folder), info.data)
+		if len(info.data) > 0 {
+			fmt.Printf("\n%s\n%s", color.HiYellowString(info.folder), info.data)
+		}
 	}
 }
 
@@ -94,7 +96,6 @@ func process(path string) RepoInfo {
 	data := ""
 	pull := false
 	push := false
-	diverged := false
 
 	if local != remote {
 		if local == base {
@@ -103,15 +104,14 @@ func process(path string) RepoInfo {
 			if remote == base {
 				push = true
 			} else {
-				diverged = true
+				pull = true
+				push = true
 			}
 		}
 	}
 
 	if len(dirty) > 0 {
-		data = color.MagentaString("Skipping as it isn't clean...\n")
-	} else if diverged {
-		data = color.HiRedString("Skipping as it has diverged from upstream...\n")
+		data = color.CyanString("Skipping as it isn't clean...\n")
 	} else {
 		if pull {
 			data = executeGit(path, "pull")
@@ -124,10 +124,6 @@ func process(path string) RepoInfo {
 				data = executeGit(path, "push")
 			}
 		}
-	}
-
-	if len(data) == 0 {
-		data = "No changes to push or pull...\n"
 	}
 
 	return RepoInfo{
