@@ -54,6 +54,7 @@ func main() {
 /usr/bin/dog $@
 `)
 	case "grep":
+		interactive = "-i"
 		prefix = "/bin"
 	case "gunzip":
 		prefix = "/bin"
