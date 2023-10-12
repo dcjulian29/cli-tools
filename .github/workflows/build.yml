@@ -1,0 +1,52 @@
+---
+name: Build
+
+'on':
+  push:
+    paths:
+      - 'go.work'
+      - 'go.work.sum'
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+
+  pull_request:
+    paths:
+      - 'go.work'
+      - 'go.work.sum'
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        tools:
+          - dns-resolve
+          - dns-scan
+          - git-repostatus
+          - git-reposync
+          - ip-scan
+          - unix-tools
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - run: git fetch --force --tags
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version-file: go.work
+
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          args: build --snapshot
+          workdir: ${{ github.workspace }}/${{ matrix.tools }}
