@@ -283,15 +283,15 @@ builds:
       - windows
     goarch:
       - amd64
+
 archives:
-  - files:
-      - LICENSE
-    builds_info:
+  - builds_info:
       mode: 0755
     name_template: "dcjulian29.apps.unix-tools_{{ .Version }}"
     format_overrides:
       - format: zip
         goos: windows
+
 chocolateys:
   - name: dcjulian29.apps.unix-tools
     authors: Julian Easterling <julian@julianscorner.com>
@@ -307,11 +307,17 @@ chocolateys:
     api_key: "{{ .Env.CHOCO_API_KEY }}"
     source_repo: "https://www.myget.org/F/dcjulian29-chocolatey/"
     skip_publish: false
+
 snapshot:
   name_template: "{{ incpatch .Version }}-next"
+
+checksum:
+  name_template: 'checksums.txt'
+
 changelog:
   sort: asc
   filters:
     exclude:
+      - '^admin:'
       - '^docs:'
       - '^test:'

@@ -29,7 +29,7 @@ jobs:
 
       - uses: actions/setup-go@v4
         with:
-          go-version-file: go.work
+          go-version-file: ${{ github.workspace }}/${{ matrix.tools }}/go.mod
 
       - uses: goreleaser/goreleaser-action@v4
         with:

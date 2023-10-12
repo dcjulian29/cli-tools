@@ -4,16 +4,12 @@ name: Build
 'on':
   push:
     paths:
-      - 'go.work'
-      - 'go.work.sum'
       - '**.go'
       - 'go.mod'
       - 'go.sum'
 
   pull_request:
     paths:
-      - 'go.work'
-      - 'go.work.sum'
       - '**.go'
       - 'go.mod'
       - 'go.sum'
@@ -44,7 +40,7 @@ jobs:
 
       - uses: actions/setup-go@v4
         with:
-          go-version-file: go.work
+          go-version-file: ${{ github.workspace }}/${{ matrix.tools }}/go.mod
 
       - uses: goreleaser/goreleaser-action@v4
         with:
