@@ -1,6 +1,6 @@
 module github.com/dcjulian29/cli-tools/git-repostatus
 
-go 1.21.1
+go 1.21.3
 
 require (
 	github.com/fatih/color v1.15.0

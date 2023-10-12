@@ -1,6 +1,6 @@
 module github.com/dcjulian29/cli-tools/ip-scan
 
-go 1.21.1
+go 1.21.3
 
 require (
 	github.com/olekukonko/tablewriter v0.0.5
