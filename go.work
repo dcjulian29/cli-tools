@@ -6,4 +6,5 @@ use (
 	./git-repostatus
 	./git-reposync
 	./ip-scan
+	./unix-tools
 )
