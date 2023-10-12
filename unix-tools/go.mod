@@ -1,3 +1,3 @@
-module github.com/dcjulian29/unix-tools
+module github.com/dcjulian29/cli-tools/unix-tools
 
-go 1.20
+go 1.21.1
