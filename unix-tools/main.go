@@ -29,6 +29,7 @@ func main() {
 	binary := strings.ReplaceAll(filepath.Base(os.Args[0]), ".exe", "")
 	interactive := "-it"
 	entrypoint := ""
+	image := "alpine:latest"
 	var content []byte
 
 	switch binary {
@@ -40,10 +41,10 @@ func main() {
 	case "cat":
 		prefix = "/bin"
 	case "curl":
+		image = "curlimages/curl:latest"
 		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
 		content = []byte(`#!/bin/sh
 
-/sbin/apk add curl > /dev/null
 /usr/bin/curl $@
 `)
 	case "doq":
@@ -106,6 +107,7 @@ func main() {
 	}
 
 	binary = fmt.Sprintf("%s/%s", prefix, binary)
+
 	args := os.Args[1:]
 	pwd, _ := os.Getwd()
 	pwd = strings.ReplaceAll(strings.ReplaceAll(pwd, "\\", "/"), ":", "")
@@ -149,7 +151,7 @@ func main() {
 		docker = append(docker, "/docker-entrypoint.sh")
 	}
 
-	docker = append(docker, "alpine:latest")
+	docker = append(docker, image)
 
 	if entrypoint == "" {
 		docker = append(docker, binary)
