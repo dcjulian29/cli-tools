@@ -22,13 +22,15 @@ type RepoInfo struct {
 	push_needed bool
 	pull_needed bool
 	diverged    bool
+	untracked   bool
 }
 
 var (
-	Only_Dirty    bool
-	Only_Push     bool
-	Only_Pull     bool
-	Only_Diverged bool
+	Only_Dirty     bool
+	Only_Push      bool
+	Only_Pull      bool
+	Only_Diverged  bool
+	Only_Untracked bool
 )
 
 func main() {
@@ -48,6 +50,8 @@ func main() {
 			Only_Pull = true
 		case "diverged":
 			Only_Diverged = true
+		case "untracked":
+			Only_Untracked = true
 		}
 	}
 
@@ -102,6 +106,10 @@ func main() {
 				if info.diverged {
 					results <- info
 				}
+			} else if Only_Untracked {
+				if info.untracked {
+					results <- info
+				}
 			} else {
 				results <- info
 			}
@@ -122,17 +130,18 @@ func main() {
 	})
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"PATH", "DIRTY", "PUSH", "PULL", "DIVERGED"})
+	table.SetHeader([]string{"PATH", "DIRTY", "PUSH", "PULL", "DIVERGED", "UNTRACKED"})
 	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
 	table.SetCenterSeparator("|")
 
 	for _, info := range processed {
 		table.Append([]string{
 			output_path(info),
-			output_dirty(info.dirty),
-			output_option(info.push_needed),
-			output_option(info.pull_needed),
-			output_option(info.diverged),
+			output_yellow(info.dirty),
+			output_red(info.push_needed),
+			output_red(info.pull_needed),
+			output_red(info.diverged),
+			output_yellow(info.untracked),
 		})
 	}
 
@@ -153,18 +162,18 @@ func output_path(info RepoInfo) string {
 	return color.GreenString(info.folder)
 }
 
-func output_dirty(f bool) string {
+func output_red(f bool) string {
 	if f {
-		return color.YellowString("yes")
+		return color.RedString("yes")
 	}
 
 	return color.GreenString("no")
 
 }
 
-func output_option(f bool) string {
+func output_yellow(f bool) string {
 	if f {
-		return color.RedString("yes")
+		return color.YellowString("yes")
 	}
 
 	return color.GreenString("no")
@@ -174,6 +183,7 @@ func output_option(f bool) string {
 func process(path string) RepoInfo {
 	_ = executeExternalProgramCapture("git", path, "fetch")
 	dirty := executeExternalProgramCapture("git", path, "diff", "--stat")
+	untracked := executeExternalProgramCapture("git", path, "ls-files", "--others", "--exclude-standard")
 	local := executeExternalProgramCapture("git", path, "rev-parse", "@")
 	remote := executeExternalProgramCapture("git", path, "rev-parse", "@{u}")
 	base := executeExternalProgramCapture("git", path, "merge-base", "@", "@{u}")
@@ -199,6 +209,7 @@ func process(path string) RepoInfo {
 		push_needed: push,
 		pull_needed: pull,
 		diverged:    diverged,
+		untracked:   len(untracked) > 0,
 	}
 }
 
