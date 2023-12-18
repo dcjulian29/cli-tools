@@ -100,6 +100,7 @@ func determineValues() (string, string, string, string, []byte) {
 	binary := strings.ReplaceAll(filepath.Base(os.Args[0]), ".exe", "")
 	interactive := "-i"
 	entrypoint := ""
+	custompoint := strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
 	image := "alpine:latest"
 	var content []byte
 
@@ -114,13 +115,13 @@ func determineValues() (string, string, string, string, []byte) {
 		prefix = "/bin"
 	case "curl":
 		image = "curlimages/curl:latest"
-		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
+		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /usr/bin/curl $@
 `)
 	case "doq":
-		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
+		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add dog > /dev/null
@@ -134,22 +135,21 @@ func determineValues() (string, string, string, string, []byte) {
 	case "gzip":
 		prefix = "/bin"
 	case "http":
-		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
+		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add httpie > /dev/null
 /usr/bin/http $@
 `)
 	case "jq":
-		interactive = "-i"
-		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
+		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add jq > /dev/null
 /usr/bin/jq $@
 `)
 	case "nano":
-		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
+		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add nano > /dev/null
@@ -160,7 +160,7 @@ func determineValues() (string, string, string, string, []byte) {
 	case "tar":
 		prefix = "/bin"
 	case "yamllint":
-		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
+		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add yamllint > /dev/null
@@ -168,7 +168,7 @@ func determineValues() (string, string, string, string, []byte) {
 `)
 	case "yq":
 		interactive = "-i"
-		entrypoint = strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
+		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add yq > /dev/null
