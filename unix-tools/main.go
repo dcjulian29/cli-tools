@@ -98,7 +98,7 @@ func determineValues() (string, string, string, string, []byte) {
 	temp, _ := os.LookupEnv("TEMP")
 	prefix := "/usr/bin"
 	binary := strings.ReplaceAll(filepath.Base(os.Args[0]), ".exe", "")
-	interactive := "-it"
+	interactive := "-i"
 	entrypoint := ""
 	image := "alpine:latest"
 	var content []byte
@@ -107,6 +107,7 @@ func determineValues() (string, string, string, string, []byte) {
 	case "alpine":
 		prefix = "/bin"
 		binary = "sh"
+		interactive = "-it"
 	case "base64":
 		prefix = "/bin"
 	case "cat":
