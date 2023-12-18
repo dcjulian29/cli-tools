@@ -108,6 +108,7 @@ func determineValues() (string, string, string, string, []byte) {
 	case "alpine":
 		prefix = "/bin"
 		binary = "sh"
+		image = "alpine:latest"
 		interactive = "-it"
 	case "base64":
 		prefix = "/bin"
