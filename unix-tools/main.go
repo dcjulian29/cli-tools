@@ -121,6 +121,11 @@ func determineValues() (string, string, string, string, []byte) {
 
 /usr/bin/curl $@
 `)
+	case "debian":
+		prefix = "/bin"
+		binary = "bash"
+		image = "debian:stable"
+		interactive = "-it"
 	case "doq":
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
@@ -129,7 +134,6 @@ func determineValues() (string, string, string, string, []byte) {
 /usr/bin/dog $@
 `)
 	case "grep":
-		interactive = "-i"
 		prefix = "/bin"
 	case "gunzip":
 		prefix = "/bin"
