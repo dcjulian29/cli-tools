@@ -1,3 +1,3 @@
-module github.com/dcjulian29/cli-tools/ping
+module github.com/dcjulian29/cli-tools/dns-resolve
 
-go 1.21.3
+go 1.21.5
