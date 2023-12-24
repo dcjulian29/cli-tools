@@ -1,0 +1,30 @@
+{
+	"folders": [
+    {
+      "path": "dns-resolve"
+    },
+    {
+      "path": "dns-scan"
+    },
+    {
+      "path": "git-repostatus"
+    },
+    {
+      "path": "git-reposync"
+    },
+    {
+			"path": "ini-file"
+		},
+    {
+      "path": "git-repostatus"
+    },
+    {
+      "path": "unix-tools"
+    }
+  ],
+  "settings": {
+    "cSpell.words": [
+      "dcjulian"
+    ]
+  }
+}
