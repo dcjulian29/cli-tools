@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -220,7 +219,7 @@ func executeExternalProgramCapture(program string, path string, params ...string
 	out, err := cmd.CombinedOutput()
 
 	if err != nil {
-		fmt.Println(err)
+		return ""
 	}
 
 	return string(out)
