@@ -1,5 +1,5 @@
 {
-	"folders": [
+  "folders": [
     {
       "path": "dns-resolve"
     },
@@ -13,10 +13,10 @@
       "path": "git-reposync"
     },
     {
-			"path": "ini-file"
-		},
+      "path": "ini-file"
+    },
     {
-      "path": "git-repostatus"
+      "path": "provision-test"
     },
     {
       "path": "unix-tools"
@@ -24,7 +24,9 @@
   ],
   "settings": {
     "cSpell.words": [
-      "dcjulian"
+      "dcjulian",
+      "fatih",
+      "goarch"
     ]
   }
 }
