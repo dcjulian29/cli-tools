@@ -25,6 +25,7 @@ type RepoInfo struct {
 }
 
 var (
+	Only_Action    bool
 	Only_Dirty     bool
 	Only_Push      bool
 	Only_Pull      bool
@@ -34,13 +35,25 @@ var (
 
 func main() {
 	pwd, _ := os.Getwd()
+	com := ""
 
 	if len(os.Args) > 1 {
 		pwd = os.Args[1]
+
+		if strings.HasPrefix("-", os.Args[1]) {
+			com = strings.Split(os.Args[1], "-")[1]
+		}
+
 	}
 
-	if len(os.Args) > 2 {
-		switch os.Args[2] {
+	if (len(os.Args) > 2) || (len(com) > 0) {
+		if len(com) == 0 {
+			com = os.Args[2]
+		}
+
+		switch com {
+		case "actions":
+			Only_Action = true
 		case "dirty":
 			Only_Dirty = true
 		case "push":
@@ -129,24 +142,62 @@ func main() {
 	})
 
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"PATH", "DIRTY", "PUSH", "PULL", "DIVERGED", "UNTRACKED"})
-	table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
-	table.SetCenterSeparator("|")
+
+	if Only_Action {
+		table.SetAutoWrapText(false)
+		table.SetAutoFormatHeaders(false)
+		table.SetAlignment(tablewriter.ALIGN_LEFT)
+		table.SetCenterSeparator("")
+		table.SetColumnSeparator("")
+		table.SetRowSeparator("")
+		table.SetHeaderLine(false)
+		table.SetBorders(tablewriter.Border{Left: false, Top: false, Right: false, Bottom: false})
+		table.SetTablePadding(" ")
+		table.SetNoWhiteSpace(true)
+	} else {
+		table.SetHeader([]string{"PATH", "DIRTY", "PUSH", "PULL", "DIVERGED", "UNTRACKED"})
+		table.SetBorders(tablewriter.Border{Left: true, Top: false, Right: true, Bottom: false})
+		table.SetCenterSeparator("|")
+	}
 
 	for _, info := range processed {
-		table.Append([]string{
-			output_path(info),
-			output_yellow(info.dirty),
-			output_red(info.push_needed),
-			output_red(info.pull_needed),
-			output_red(info.diverged),
-			output_yellow(info.untracked),
-		})
+		dt := output_yellow(info.dirty)
+		pus := output_red(info.push_needed)
+		pul := output_red(info.pull_needed)
+		dv := output_red(info.diverged)
+		u := output_yellow(info.untracked)
+
+		if Only_Action {
+			pus = iif(strings.Contains(pus, "no"), "", pus)
+			pul = iif(strings.Contains(pul, "no"), "", pul)
+			dv = iif(strings.Contains(dv, "no"), "", dv)
+			u = iif(strings.Contains(u, "no"), "", u)
+
+			dt = iif(strings.Contains(dt, "yes"), strings.Replace(dt, "yes", "dirty", 1), dt)
+			pus = iif(strings.Contains(pus, "yes"), strings.Replace(pus, "yes", "push needed", 1), pus)
+			pul = iif(strings.Contains(pul, "yes"), strings.Replace(pul, "yes", "pull needed", 1), pul)
+			dv = iif(strings.Contains(dv, "yes"), strings.Replace(dv, "yes", "diverged", 1), dv)
+			u = iif(strings.Contains(u, "yes"), strings.Replace(u, "yes", "untracked files", 1), u)
+		}
+
+		if Only_Action && !info.dirty && !info.push_needed && !info.pull_needed && !info.diverged && !info.untracked {
+			continue
+		}
+
+		table.Append([]string{output_path(info), dt, pus, pul, dv, u})
 	}
 
 	spinner.Stop()
 
 	table.Render()
+}
+
+func iif(condition bool, a string, b string) string {
+	if condition {
+		return a
+	}
+
+	return b
 }
 
 func output_path(info RepoInfo) string {
