@@ -28,7 +28,9 @@ jobs:
           - dns-scan
           - git-repostatus
           - git-reposync
+          - ini-file
           - ip-scan
+          - provision-test
           - unix-tools
 
     steps:
