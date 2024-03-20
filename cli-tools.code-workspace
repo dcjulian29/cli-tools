@@ -1,6 +1,9 @@
 {
   "folders": [
     {
+      "path": "build-project"
+    },
+    {
       "path": "dns-resolve"
     },
     {
