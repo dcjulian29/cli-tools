@@ -114,7 +114,7 @@ func process(path string) RepoInfo {
 		data = color.CyanString("Skipping as it isn't clean...\n")
 	} else {
 		if pull {
-			data = executeGit(path, "pull")
+			data = executeGit(path, "pull", "--rebase", "--prune", "--recurse-submodules=yes")
 		}
 
 		if push {
