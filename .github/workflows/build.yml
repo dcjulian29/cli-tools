@@ -24,6 +24,7 @@ jobs:
     strategy:
       matrix:
         tools:
+          - build-project
           - dns-resolve
           - dns-scan
           - git-repostatus
