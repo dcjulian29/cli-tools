@@ -1,24 +1,11 @@
 ---
-name: Build
+name: CLI Tools
 
 'on':
   push:
-    paths:
-      - '**.go'
-      - '**/go.mod'
-      - '**/go.sum'
-
-  pull_request:
-    paths:
-      - '**.go'
-      - '**/go.mod'
-      - '**/go.sum'
-
-  workflow_dispatch:
 
 jobs:
   build:
-    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
     runs-on: ubuntu-latest
 
     strategy:
@@ -49,3 +36,73 @@ jobs:
         with:
           args: build --snapshot
           workdir: ${{ github.workspace }}/${{ matrix.tools }}
+
+  package:
+    if: contains(github.ref, 'tags/')
+    needs: [build]
+    runs-on: windows-2022
+
+    strategy:
+      matrix:
+        tools:
+          - build-project
+          - dns-resolve
+          - dns-scan
+          - git-repostatus
+          - git-reposync
+          - ini-file
+          - ip-scan
+          - provision-test
+          - unix-tools
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - run: git fetch --force --tags
+
+      - uses: actions/setup-go@v4
+        with:
+          go-version-file: ${{ github.workspace }}/${{ matrix.tools }}/go.mod
+
+      - uses: goreleaser/goreleaser-action@v4
+        with:
+          args: release --skip-publish
+          workdir: ${{ github.workspace }}/${{ matrix.tools }}
+
+      - uses: NuGet/setup-nuget@v1.1.1
+
+      - uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: ${{ matrix.tools }}/dist/dcjulian29.*_*.*
+          omitBody: true
+          omitName: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: >
+          dotnet nuget push ${{ matrix.tools }}/**/*.nupkg
+          --api-key '${{ secrets.CHOCO_API_KEY }}'
+          --source '${{ vars.CHOCO_URL }}'
+          --skip-duplicate
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+  release:
+    if: contains(github.ref, 'tags/')
+    needs: [package]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
+          makeLatest: true
+          name: ${{ github.ref_name }}
+          tag: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
