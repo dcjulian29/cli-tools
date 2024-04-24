@@ -37,9 +37,27 @@ jobs:
           args: build --snapshot
           workdir: ${{ github.workspace }}/${{ matrix.tools }}
 
-  package:
+  release:
     if: contains(github.ref, 'tags/')
     needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: ncipollo/release-action@v1
+        with:
+          generateReleaseNotes: true
+          makeLatest: true
+          name: ${{ github.ref_name }}
+          tag: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  package:
+    if: contains(github.ref, 'tags/')
+    needs: [release]
     runs-on: windows-2022
 
     strategy:
@@ -88,22 +106,3 @@ jobs:
           --skip-duplicate
         env:
           DOTNET_CLI_TELEMETRY_OPTOUT: 1
-
-  release:
-    if: contains(github.ref, 'tags/')
-    needs: [package]
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - uses: ncipollo/release-action@v1
-        with:
-          generateReleaseNotes: true
-          allowUpdates: true
-          makeLatest: true
-          name: ${{ github.ref_name }}
-          tag: ${{ github.ref }}
-          token: ${{ secrets.GITHUB_TOKEN }}
