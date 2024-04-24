@@ -27,7 +27,7 @@ nfpms:
     maintainer: Julian Easterling <julian@julianscorner.com>
     license: Apache 2.0
     description: |-
-      ini-file provides management functions.
+      ini-file is a tool to work with ini files with sort, add, get, set, and dump commands.
     formats:
       - deb
       - rpm
@@ -42,7 +42,7 @@ chocolateys:
     require_license_acceptance: false
     bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
     description: |
-      ini-file synchronizes all git repositories located within the specified path or current directory.
+      ini-file is a tool to work with ini files with sort, add, get, set, and dump commands.
     skip_publish: true
     source_repo: "https://www.myget.org/F/dcjulian29-chocolatey/"
 
