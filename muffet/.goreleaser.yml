@@ -1,0 +1,67 @@
+---
+before:
+  hooks:
+    - go mod tidy
+    - go mod verify
+builds:
+  - binary: muffet
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+
+archives:
+  - builds_info:
+      group: root
+      owner: root
+      mode: 0755
+    name_template: "dcjulian29.apps.muffet_{{ .Version }}_{{ .Os }}"
+    format_overrides:
+      - format: zip
+        goos: windows
+
+nfpms:
+  - package_name: dcjulian29.apps.muffet
+    homepage: https://github.com/dcjulian29/cli-tools/muffet/
+    maintainer: Julian Easterling <julian@julianscorner.com>
+    license: Apache 2.0
+    description: |-
+      Muffet is a website link checker which scrapes and inspects all pages in a website recursively.
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/local/bin
+
+chocolateys:
+  - name: dcjulian29.apps.muffet
+    authors: Julian Easterling <julian@julianscorner.com>
+    project_url: https://github.com/dcjulian29/cli-tools/muffet/
+    copyright: 2024 Julian Easterling julian@julianscorner.com
+    license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
+    require_license_acceptance: false
+    bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
+    description: |
+      Muffet is a website link checker which scrapes and inspects all pages in a website recursively.
+    dependencies:
+      - id: docker-desktop
+    api_key: "{{ .Env.CHOCO_API_KEY }}"
+    source_repo: "https://www.myget.org/F/dcjulian29-chocolatey/"
+    skip_publish: false
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^admin:'
+      - '^docs:'
+      - '^test:'

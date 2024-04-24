@@ -18,6 +18,7 @@ jobs:
           - git-reposync
           - ini-file
           - ip-scan
+          - muffet
           - provision-test
           - unix-tools
 
@@ -70,6 +71,7 @@ jobs:
           - git-reposync
           - ini-file
           - ip-scan
+          - muffet
           - provision-test
           - unix-tools
 
