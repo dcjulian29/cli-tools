@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -37,34 +38,47 @@ func main() {
 	pwd, _ := os.Getwd()
 	com := ""
 
-	if len(os.Args) > 1 {
-		pwd = os.Args[1]
+	fmt.Println(len(os.Args))
+	fmt.Println(os.Args)
 
-		if strings.HasPrefix("-", os.Args[1]) {
+	if len(os.Args) > 1 {
+		if !strings.HasPrefix(os.Args[1], "-") {
+			pwd = os.Args[1]
+		} else {
 			com = strings.Split(os.Args[1], "-")[1]
 		}
-
 	}
 
-	if (len(os.Args) > 2) || (len(com) > 0) {
+	if len(os.Args) > 2 {
+		fmt.Println(len(com))
 		if len(com) == 0 {
-			com = os.Args[2]
+			if strings.HasPrefix(os.Args[2], "-") {
+				com = strings.Split(os.Args[2], "-")[1]
+			} else {
+				com = os.Args[2]
+			}
+		} else {
+			if strings.HasPrefix(os.Args[2], "-") {
+				com = strings.Split(os.Args[2], "-")[1]
+			} else {
+				pwd = os.Args[2]
+			}
 		}
+	}
 
-		switch com {
-		case "actions":
-			Only_Action = true
-		case "dirty":
-			Only_Dirty = true
-		case "push":
-			Only_Push = true
-		case "pull":
-			Only_Pull = true
-		case "diverged":
-			Only_Diverged = true
-		case "untracked":
-			Only_Untracked = true
-		}
+	switch com {
+	case "actions":
+		Only_Action = true
+	case "dirty":
+		Only_Dirty = true
+	case "push":
+		Only_Push = true
+	case "pull":
+		Only_Pull = true
+	case "diverged":
+		Only_Diverged = true
+	case "untracked":
+		Only_Untracked = true
 	}
 
 	spinner, _ := yacspin.New(yacspin.Config{
