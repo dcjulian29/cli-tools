@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -38,9 +37,6 @@ func main() {
 	pwd, _ := os.Getwd()
 	com := ""
 
-	fmt.Println(len(os.Args))
-	fmt.Println(os.Args)
-
 	if len(os.Args) > 1 {
 		if !strings.HasPrefix(os.Args[1], "-") {
 			pwd = os.Args[1]
@@ -50,7 +46,6 @@ func main() {
 	}
 
 	if len(os.Args) > 2 {
-		fmt.Println(len(com))
 		if len(com) == 0 {
 			if strings.HasPrefix(os.Args[2], "-") {
 				com = strings.Split(os.Args[2], "-")[1]
