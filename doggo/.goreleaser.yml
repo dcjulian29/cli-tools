@@ -1,0 +1,68 @@
+---
+version: 2
+before:
+  hooks:
+    - go mod tidy
+    - go mod verify
+builds:
+  - binary: doggo
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+
+archives:
+  - builds_info:
+      group: root
+      owner: root
+      mode: 0755
+    name_template: "dcjulian29.apps.doggo_{{ .Version }}_{{ .Os }}"
+    format_overrides:
+      - format: zip
+        goos: windows
+
+nfpms:
+  - package_name: dcjulian29.apps.doggo
+    homepage: https://github.com/dcjulian29/cli-tools/doggo/
+    maintainer: Julian Easterling <julian@julianscorner.com>
+    license: Apache 2.0
+    description: |-
+      Doggo is a command-line DNS client for humans.
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/local/bin
+
+chocolateys:
+  - name: dcjulian29.apps.doggo
+    authors: Julian Easterling <julian@julianscorner.com>
+    project_url: https://github.com/dcjulian29/cli-tools/doggo/
+    copyright: 2024 Julian Easterling julian@julianscorner.com
+    license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
+    require_license_acceptance: false
+    bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
+    description: |
+      Doggo is a command-line DNS client for humans.
+    dependencies:
+      - id: docker-desktop
+    api_key: "{{ .Env.CHOCO_API_KEY }}"
+    source_repo: "https://www.myget.org/F/dcjulian29-chocolatey/"
+    skip_publish: false
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+checksum:
+  name_template: 'checksums.txt'
+
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^admin:'
+      - '^docs:'
+      - '^test:'
