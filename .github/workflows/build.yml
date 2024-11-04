@@ -93,7 +93,7 @@ jobs:
           args: release --skip publish
           workdir: ${{ github.workspace }}/${{ matrix.tools }}
 
-      - uses: NuGet/setup-nuget@v2.0.0
+      - uses: NuGet/setup-nuget@v2.0.1
 
       - uses: ncipollo/release-action@v1
         with:
