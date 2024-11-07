@@ -12,8 +12,6 @@ if (Test-Path $artifactDir) {
 
 New-Item -Path $artifactDir -ItemType Directory | Out-Null
 
-#------------------------------------------------------------------------------
-
 Get-ChildItem -Path $baseDir -Directory | ForEach-Object {
   Push-Location $(Join-Path -Path $baseDir -ChildPath $_.Name)
 
@@ -24,14 +22,6 @@ Get-ChildItem -Path $baseDir -Directory | ForEach-Object {
       Write-Output "`n`n"
     }
   }
-
-  Pop-Location
-}
-
-#------------------------------------------------------------------------------
-
-Get-ChildItem -Path $baseDir -Directory | ForEach-Object {
-  Push-Location $(Join-Path -Path $baseDir -ChildPath $_.Name)
 
   if (Test-Path dist/artifacts.json) {
     $dist = Get-Content -Path dist/artifacts.json -Raw | ConvertFrom-Json
@@ -49,7 +39,6 @@ Get-ChildItem -Path $baseDir -Directory | ForEach-Object {
 
     Remove-Item -Path dist/ -Recurse -Force
   }
-
 
   Pop-Location
 }
