@@ -12,9 +12,10 @@ jobs:
       matrix:
         tools:
           - build-project
-          - doggo
           - dns-resolve
           - dns-scan
+          - doggo
+          - download
           - git-repostatus
           - git-reposync
           - ini-file
@@ -66,9 +67,10 @@ jobs:
       matrix:
         tools:
           - build-project
-          - doggo
           - dns-resolve
           - dns-scan
+          - doggo
+          - download
           - git-repostatus
           - git-reposync
           - ini-file
