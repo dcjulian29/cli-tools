@@ -1,4 +1,5 @@
 project_name: git-reposync
+version: 2
 before:
   hooks:
     - go mod tidy

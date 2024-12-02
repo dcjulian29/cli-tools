@@ -1,4 +1,6 @@
 ---
+project_name: muffet
+version: 2
 before:
   hooks:
     - go mod tidy
