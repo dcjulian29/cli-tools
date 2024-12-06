@@ -3,11 +3,6 @@ name: CLI Tools
 
 'on':
   push:
-    paths:
-      - '**/.goreleaser.yaml'
-      - '**/*.mod'
-      - '**/*.sum'
-      - '**/*.go'
 
 jobs:
   build:
