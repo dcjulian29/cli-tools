@@ -17,9 +17,9 @@ Get-ChildItem -Path $baseDir -Directory | ForEach-Object {
 
   if ((Test-Path ./.goreleaser.yml) -or (Test-Path ./.goreleaser.yaml)) {
     if (Get-Command -Name goreleaser -ErrorAction SilentlyContinue) {
-      Write-Output "`n---------------------->  $pwd"
+      Write-Output "`n---------------------->  $pwd`n"
       goreleaser build --single-target --clean --snapshot
-      Write-Output "`n`n"
+      Write-Output " "
     }
   }
 
@@ -31,7 +31,7 @@ Get-ChildItem -Path $baseDir -Directory | ForEach-Object {
         $src = Join-Path -Path $PWD -ChildPath $item.path
         $dst = Join-Path -Path $artifactDir -ChildPath $item.name
 
-        Write-Output "$src`n  |`n  V`n$dst"
+        Write-Output ">>-> $src"
 
         Move-Item -Path $src -Destination $dst
       }
