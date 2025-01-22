@@ -55,7 +55,7 @@ chocolateys:
     skip_publish: false
 
 snapshot:
-  name_template: "{{ incpatch .Version }}-next"
+  version_template: "{{ incpatch .Version }}-next"
 
 checksum:
   name_template: 'checksums.txt'
