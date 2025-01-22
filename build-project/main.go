@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/fatih/color"
@@ -33,15 +34,15 @@ func main() {
 			action = "goreleaser"
 		}
 
-		if fileExists("build.sh") {
+		if fileExists("build.sh") && runtime.GOOS != "windows" {
 			action = "sh"
 		}
 
-		if fileExists("build.bat") {
+		if fileExists("build.bat") && runtime.GOOS == "windows" {
 			action = "bat"
 		}
 
-		if fileExists("build.cmd") {
+		if fileExists("build.cmd") && runtime.GOOS == "windows" {
 			action = "cmd"
 		}
 
