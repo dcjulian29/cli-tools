@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -61,21 +62,25 @@ func main() {
 		}
 	}
 
-	switch com {
-	case "actions":
-		Only_Action = true
-	case "dirty":
-		Only_Dirty = true
-	case "push":
-		Only_Push = true
-	case "pull":
-		Only_Pull = true
-	case "diverged":
-		Only_Diverged = true
-	case "untracked":
-		Only_Untracked = true
+	if len(com) > 0 {
+		switch com {
+		case "actions":
+			Only_Action = true
+		case "dirty":
+			Only_Dirty = true
+		case "push":
+			Only_Push = true
+		case "pull":
+			Only_Pull = true
+		case "diverged":
+			Only_Diverged = true
+		case "untracked":
+			Only_Untracked = true
+		default:
+			fmt.Println("available options: dirty, push, pull, diverged, untracked, actions = all")
+			os.Exit(1)
+		}
 	}
-
 	spinner, _ := yacspin.New(yacspin.Config{
 		Frequency: 100 * time.Millisecond,
 		Colors:    []string{"fgYellow"},
