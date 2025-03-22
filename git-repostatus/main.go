@@ -77,7 +77,7 @@ func main() {
 		case "untracked":
 			Only_Untracked = true
 		default:
-			fmt.Println("available options: dirty, push, pull, diverged, untracked, actions = all")
+			fmt.Println("available options: dirty, push, pull, diverged, untracked, actions")
 			os.Exit(1)
 		}
 	}
