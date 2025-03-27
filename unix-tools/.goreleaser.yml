@@ -292,7 +292,7 @@ archives:
       mode: 0755
     name_template: "dcjulian29.apps.unix-tools_{{ .Version }}"
     format_overrides:
-      - format: zip
+      - formats: [ "zip" ]
         goos: windows
 
 chocolateys:
