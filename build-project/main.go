@@ -47,7 +47,7 @@ func main() {
 		}
 
 		if fileExists("build.ps1") {
-			action = "ps"
+			action = "powershell"
 		}
 
 		if fileExists("build.cake") {
@@ -62,8 +62,6 @@ func main() {
 	case "cake":
 		buildCake()
 		os.Exit(0)
-	case "ps":
-	case "pshell":
 	case "powershell":
 		buildPowershell()
 		os.Exit(0)
