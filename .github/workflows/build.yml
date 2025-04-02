@@ -11,7 +11,6 @@ jobs:
     strategy:
       matrix:
         tools:
-          - build-project
           - dns-resolve
           - dns-scan
           - doggo
@@ -65,7 +64,6 @@ jobs:
     strategy:
       matrix:
         tools:
-          - build-project
           - dns-resolve
           - dns-scan
           - doggo
