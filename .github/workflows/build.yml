@@ -33,7 +33,7 @@ jobs:
         with:
           go-version-file: ${{ github.workspace }}/${{ matrix.tools }}/go.mod
 
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@v7
         with:
           args: build --snapshot
           workdir: ${{ github.workspace }}/${{ matrix.tools }}
@@ -86,7 +86,7 @@ jobs:
         with:
           go-version-file: ${{ github.workspace }}/${{ matrix.tools }}/go.mod
 
-      - uses: goreleaser/goreleaser-action@v6
+      - uses: goreleaser/goreleaser-action@v7
         with:
           args: release --skip publish
           workdir: ${{ github.workspace }}/${{ matrix.tools }}
