@@ -18,127 +18,103 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/dcjulian29/go-toolbox/docker"
+	"github.com/dcjulian29/go-toolbox/filesystem"
+	"github.com/dcjulian29/go-toolbox/textformat"
 )
 
 func main() {
-	binary, interactive, entrypoint, image, content := determineValues()
+	binary, interactive, entrypoint, image, tag, content := determineValues()
+	args := filesystem.EnsureUnixPathArguments()
+	data, work := docker.HostContainerVolume()
+	volumes := []string{data}
 
-	args := os.Args[1:]
-	pwd, _ := os.Getwd()
-	pwd = strings.ReplaceAll(strings.ReplaceAll(pwd, "\\", "/"), ":", "")
-	host := fmt.Sprintf("%s:\\", string(pwd[0]))
-	container := fmt.Sprintf("/%s", string(pwd[0]))
+	if len(content) > 0 {
+		if err := filesystem.EnsureFileExist(entrypoint, content); err != nil {
+			fmt.Println(textformat.Fatal(err.Error()))
+			os.Exit(1)
+		}
 
-	data := pwd[2:]
-
-	work := fmt.Sprintf("%s/%s", container, data)
-
-	docker := []string{
-		"run",
-		"--rm",
-		interactive,
-		"-v",
-		fmt.Sprintf("%s:%s", host, container),
-		"-w",
-		work,
+		volumes = append(volumes, fmt.Sprintf("%s:/docker-entrypoint.sh", strings.ReplaceAll(entrypoint, "/", "\\")))
+		entrypoint = "/docker-entrypoint.sh"
+		binary = ""
 	}
 
-	if entrypoint != "" {
-		createCustompoint(entrypoint, content)
-
-		docker = append(docker, "-v")
-		docker = append(docker, fmt.Sprintf("%s:/docker-entrypoint.sh", entrypoint))
-		docker = append(docker, "--entrypoint")
-		docker = append(docker, "/docker-entrypoint.sh")
+	opts := docker.ContainerOptions{
+		AdditionalArgs:   strings.Join(args, " "),
+		Command:          binary,
+		EntryPoint:       entrypoint,
+		Image:            image,
+		Interactive:      interactive,
+		Tag:              tag,
+		Volumes:          volumes,
+		WorkingDirectory: work,
 	}
 
-	docker = append(docker, image)
-
-	if entrypoint == "" {
-		docker = append(docker, binary)
-	}
-
-	if len(args) > 0 {
-		docker = append(docker, args...)
-	}
-
-	cmd := exec.Command("docker", docker...)
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("\n\033[1;31m%s: \033[1;33m%s\033[0m\n", "An error occurred", err)
+	if _, err := docker.Run(opts); err != nil {
+		fmt.Println(textformat.Fatal(err.Error()))
 		os.Exit(1)
 	}
-
-	os.Exit(0)
 }
 
-func createCustompoint(entrypoint string, content []byte) {
-	os.Remove(entrypoint)
-
-	file, err := os.Create(entrypoint)
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer file.Close()
-
-	if _, err = file.Write(content); err != nil {
-		panic(err)
-	}
-}
-
-func determineValues() (string, string, string, string, []byte) {
+func determineValues() (string, bool, string, string, string, []byte) {
 	temp, _ := os.LookupEnv("TEMP")
 	prefix := "/usr/bin"
 	binary := strings.ReplaceAll(filepath.Base(os.Args[0]), ".exe", "")
-	interactive := "-i"
+	interactive := false
 	entrypoint := ""
 	custompoint := strings.ReplaceAll(fmt.Sprintf("%s\\docker-entrypoint.sh", temp), "\\", "/")
-	image := "alpine:latest"
+	image := "alpine"
+	tag := "latest"
 	var content []byte
 
 	switch binary {
 	case "alpine":
 		prefix = "/bin"
 		binary = "sh"
-		image = "alpine:latest"
-		interactive = "-it"
+		interactive = true
+
 	case "base64":
 		prefix = "/bin"
+
 	case "cat":
 		prefix = "/bin"
+
 	case "curl":
-		image = "curlimages/curl:latest"
+		image = "curlimages/curl"
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /usr/bin/curl $@
 `)
+
 	case "debian":
 		prefix = "/bin"
 		binary = "bash"
-		image = "debian:stable"
-		interactive = "-it"
-	case "doq":
+		image = "debian"
+		tag = "stable"
+		interactive = true
+
+	case "dog":
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add dog > /dev/null
 /usr/bin/dog $@
 `)
+
 	case "grep":
 		prefix = "/bin"
+
 	case "gunzip":
 		prefix = "/bin"
+
 	case "gzip":
 		prefix = "/bin"
+
 	case "http":
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
@@ -146,6 +122,7 @@ func determineValues() (string, string, string, string, []byte) {
 /sbin/apk add httpie > /dev/null
 /usr/bin/http $@
 `)
+
 	case "jq":
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
@@ -153,6 +130,8 @@ func determineValues() (string, string, string, string, []byte) {
 /sbin/apk add jq > /dev/null
 /usr/bin/jq $@
 `)
+		interactive = true
+
 	case "nano":
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
@@ -160,10 +139,14 @@ func determineValues() (string, string, string, string, []byte) {
 /sbin/apk add nano > /dev/null
 /usr/bin/nano $@
 `)
+		interactive = true
+
 	case "sed":
 		prefix = "/bin"
+
 	case "tar":
 		prefix = "/bin"
+
 	case "yamllint":
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
@@ -171,19 +154,21 @@ func determineValues() (string, string, string, string, []byte) {
 /sbin/apk add yamllint > /dev/null
 /usr/bin/yamllint $@
 `)
+
 	case "yq":
-		interactive = "-i"
 		entrypoint = custompoint
 		content = []byte(`#!/bin/sh
 
 /sbin/apk add yq > /dev/null
 /usr/bin/yq $@
 `)
+		interactive = true
+
 	case "zcat":
 		prefix = "/bin"
 	}
 
 	binary = fmt.Sprintf("%s/%s", prefix, binary)
 
-	return binary, interactive, entrypoint, image, content
+	return binary, interactive, entrypoint, image, tag, content
 }
