@@ -54,8 +54,24 @@ builds:
       - windows
     goarch:
       - amd64
+  - id: debian
+    binary: debian
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
   - id: diff
     binary: diff
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - windows
+    goarch:
+      - amd64
+  - id: dog
+    binary: dog
     env:
       - CGO_ENABLED=0
     goos:
@@ -299,7 +315,7 @@ chocolateys:
   - name: dcjulian29.apps.unix-tools
     authors: Julian Easterling <julian@julianscorner.com>
     project_url: https://github.com/dcjulian29/cli-tools/unix-tools/
-    copyright: 2023 Julian Easterling julian@julianscorner.com
+    copyright: 2026 Julian Easterling julian@julianscorner.com
     license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
     require_license_acceptance: false
     bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
