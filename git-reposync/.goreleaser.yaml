@@ -27,7 +27,7 @@ archives:
 nfpms:
   - package_name: dcjulian29.apps.git-reposync
     homepage: https://github.com/dcjulian29/cli-tools/git-reposync/
-    maintainer: Julian Easterling <julian@julianscorner.com>
+    maintainer: Julian Easterling
     license: Apache 2.0
     description: |-
       git-reposync synchronizes all git repositories located within the specified path or current directory.
@@ -38,9 +38,9 @@ nfpms:
 
 chocolateys:
   - name: dcjulian29.apps.git-reposync
-    authors: Julian Easterling <julian@julianscorner.com>
+    authors: Julian Easterling
     project_url: https://github.com/dcjulian29/cli-tools/git-reposync/
-    copyright: 2023 Julian Easterling julian@julianscorner.com
+    copyright: 2026 Julian Easterling
     license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
     require_license_acceptance: false
     bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues

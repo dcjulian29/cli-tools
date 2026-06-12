@@ -25,7 +25,7 @@ archives:
 nfpms:
   - package_name: dcjulian29.apps.ini-file
     homepage: https://github.com/dcjulian29/cli-tools/ini-file/
-    maintainer: Julian Easterling <julian@julianscorner.com>
+    maintainer: Julian Easterling
     license: Apache 2.0
     description: |-
       ini-file is a tool to work with ini files with sort, add, get, set, and dump commands.
@@ -36,9 +36,9 @@ nfpms:
 
 chocolateys:
   - name: dcjulian29.apps.ini-file
-    authors: Julian Easterling <julian@julianscorner.com>
+    authors: Julian Easterling
     project_url: https://github.com/dcjulian29/cli-tools/ini-file/
-    copyright: 2023 Julian Easterling julian@julianscorner.com
+    copyright: 2026 Julian Easterling
     license_url: https://github.com/dcjulian29/cli-tools/blob/main/LICENSE
     require_license_acceptance: false
     bug_tracker_url: https://github.com/dcjulian29/cli-tools/issues
