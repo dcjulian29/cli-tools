@@ -15,8 +15,6 @@ jobs:
           - dns-scan
           - doggo
           - download
-          - git-repostatus
-          - git-reposync
           - ini-file
           - ip-scan
           - muffet
@@ -75,8 +73,6 @@ jobs:
           - dns-scan
           - doggo
           - download
-          - git-repostatus
-          - git-reposync
           - ini-file
           - ip-scan
           - muffet
