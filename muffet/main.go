@@ -18,46 +18,32 @@ package main
 import (
 	"fmt"
 	"os"
-	"os/exec"
-	"strings"
+
+	"github.com/dcjulian29/go-toolbox/docker"
+	"github.com/dcjulian29/go-toolbox/filesystem"
+	"github.com/dcjulian29/go-toolbox/textformat"
 )
 
 func main() {
-	args := os.Args[1:]
-	pwd, _ := os.Getwd()
-	pwd = strings.ReplaceAll(strings.ReplaceAll(pwd, "\\", "/"), ":", "")
-	host := fmt.Sprintf("%s:\\", string(pwd[0]))
-	container := fmt.Sprintf("/%s", string(pwd[0]))
+	args := filesystem.EnsureUnixPathArguments()
 
-	data := pwd[2:]
-
-	work := fmt.Sprintf("%s/%s", container, data)
-
-	docker := []string{
-		"run",
-		"--rm",
-		"-it",
-		"-v",
-		fmt.Sprintf("%s:%s", host, container),
-		"-w",
-		work,
-	}
-
-	docker = append(docker, "raviqqe/muffet:latest")
-
-	if len(args) > 0 {
-		docker = append(docker, args...)
-	}
-
-	cmd := exec.Command("docker", docker...)
-	cmd.Stderr = os.Stderr
-	cmd.Stdin = os.Stdin
-	cmd.Stdout = os.Stdout
-
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("\n\033[1;31m%s: \033[1;33m%s\033[0m\n", "An error occurred", err)
+	data, work, err := docker.HostContainerVolume()
+	if err != nil {
+		fmt.Println(textformat.Fatal(err.Error()))
 		os.Exit(1)
 	}
 
-	os.Exit(0)
+	opts := docker.ContainerOptions{
+		AdditionalArgs:   args,
+		Image:            "raviqqe/muffet",
+		Interactive:      true,
+		Tag:              "latest",
+		Volumes:          []string{data},
+		WorkingDirectory: work,
+	}
+
+	if _, err := docker.Run(opts); err != nil {
+		fmt.Println(textformat.Fatal(err.Error()))
+		os.Exit(1)
+	}
 }
