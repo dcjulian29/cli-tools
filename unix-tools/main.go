@@ -28,8 +28,13 @@ import (
 
 func main() {
 	binary, interactive, entrypoint, image, tag, content := determineValues()
-	args := filesystem.EnsureUnixPathArguments()
-	data, work := docker.HostContainerVolume()
+	data, work, err := docker.HostContainerVolume()
+
+	if err != nil {
+		fmt.Println(textformat.Fatal(err.Error()))
+		os.Exit(1)
+	}
+
 	volumes := []string{data}
 
 	if len(content) > 0 {
@@ -44,7 +49,7 @@ func main() {
 	}
 
 	opts := docker.ContainerOptions{
-		AdditionalArgs:   strings.Join(args, " "),
+		AdditionalArgs:   filesystem.EnsureUnixPathArguments(),
 		Command:          binary,
 		EntryPoint:       entrypoint,
 		Image:            image,
